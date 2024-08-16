@@ -669,6 +669,12 @@ The Nexcloud server setup you'll see here will have its own IP through the Metal
 
     - Again in the `http.server` subsection, look for the `root` parameter set there. It has the path, within the Nginx container, to the webroot of your Nextcloud server (`/var/www/html`), where Nextcloud will install all the files it needs to run.
 
+    > **BEWARE!**  
+    > It is always a good idea to compare your `nginx.conf` against the one found [in the Nextcloud documentation](https://docs.nextcloud.com/server/stable/admin_manual/installation/nginx.html), for your version of Nextcloud. You may need to apply any addition found there in your config too.
+
+    > **BEWARE!**  
+    > If you get a message like `Error occurred while checking server setup` in the overview screen of the administration section of Nextcloud, carefully look into the logs of your nextcloud pod ([chapter on logs here](https://github.com/kriegalex/smallab-k8s-pve-guide/blob/feature/minor-improvements/G036%20-%20Host%20and%20K3s%20cluster%20~%20Monitoring%20and%20diagnosis.md#checking-the-logs)). For example, you might get an alert log telling you that 8 worker connections is not enough.
+
 4. Put in `zz-docker.conf` the following parameters.
 
     ~~~properties
@@ -806,7 +812,7 @@ The Nexcloud server setup you'll see here will have its own IP through the Metal
               limits:
                 memory: 512Mi
             volumeMounts:
-            - name: fpm-config
+            - name: nginx-config
               subPath: zz-docker.conf
               mountPath: /usr/local/etc/php-fpm.d/zz-docker.conf
             - name: html-storage
